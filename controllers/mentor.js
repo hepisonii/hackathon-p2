@@ -3,11 +3,11 @@ const User = require("../models/user");
 const Profile = require("../models/profile");
 const Path = require("path");
 
-async function handleGetMentor(req,res){
+async function handleGetMentorProfile(req,res){
     return res.sendFile(Path.resolve("../views/mentorProfile.html"));    
 }
 
-async function handlePatchMentor(req,res){
+async function handlePatchMentorProfile(req,res){
     
 }
 
@@ -16,7 +16,7 @@ async function handleGetMentorProfileView(req,res){
 }
 
 module.exports = {
-    handleGetMentor,
-    handlePatchMentor,
+    handleGetMentorProfile,
+    handlePatchMentorProfile,
     handleGetMentorProfileView
 }

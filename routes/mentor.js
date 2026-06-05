@@ -5,10 +5,10 @@ const {
     handleGetMentorProfile,
     handlePatchMentorProfile,
     handleGetMentorProfileView
-} = require("handleGetMentorProfile");
+} = require("../controllers/mentor");
 
-mentorRouter.get("/", checkRole["mentor"], handleGetMentorProfile);
-mentorRouter.patch("/", checkRole["mentor"], handlePatchMentorProfile);
+mentorRouter.get("/", checkRole("mentor"), handleGetMentorProfile);
+mentorRouter.patch("/", checkRole("mentor"), handlePatchMentorProfile);
 mentorRouter.get("/:id", handleGetMentorProfileView);
 
 module.exports = mentorRouter;

@@ -38,7 +38,41 @@ const limiter = rateLimit({
     legacyHeaders: false,
 })
 
+// middleware/checkRole.js
+
+function checkRole(requiredRole) {
+  return (req, res, next) => {
+    try {
+      // 🔐 Check if user exists
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: "Unauthorized"
+        });
+      }
+
+      // 🚫 Role check
+      if (req.user.role !== requiredRole) {
+        return res.status(403).json({
+          success: false,
+          message: `Access denied. ${requiredRole} only`
+        });
+      }
+
+      // ✅ Allowed
+      next();
+
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Server error"
+      });
+    }
+  };
+};
+
 module.exports = {
     checkAuth,
     limiter,
+    checkRole
 }
