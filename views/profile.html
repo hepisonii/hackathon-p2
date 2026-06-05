@@ -356,13 +356,11 @@
       const res = await fetch('/api/user');
       if (!res.ok) return;
       const u = await res.json();
-      console.log("User: ", u)
-      console.log("Username: ",u.username);
       // Sidebar
       const avatarSrc = u.profileImageURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullname || 'User')}&background=191c25&color=6ea8c8&size=72`;
       document.getElementById('sidebarAvatar').src = avatarSrc;
       document.getElementById('uploadPreview').src  = avatarSrc;
-      if (u.fullname)  document.getElementById('sidebarName').textContent      = u.fullname;
+      if (u.fullName)  document.getElementById('sidebarName').textContent      = u.fullName;
       if (u.username)  document.getElementById('sidebarHandle').textContent    = '@' + u.username;
       if (u.email)     document.getElementById('sidebarEmail').textContent     = u.email;
       if (u.role)      document.getElementById('roleBadge').textContent        = u.role;
@@ -370,14 +368,14 @@
         (u.age || '') + (u.age && u.gender ? ' · ' : '') + (u.gender || '');
 
       // View mode divs
-      if (u.fullname)  document.getElementById('view-fullname').textContent  = u.fullname;
+      if (u.fullName)  document.getElementById('view-fullName').textContent  = u.fullName;
       if (u.username)  document.getElementById('view-username').textContent  = '@' + u.username;
       if (u.email)     document.getElementById('view-email').textContent     = u.email;
       if (u.age)       document.getElementById('view-age').textContent       = u.age;
       if (u.gender)    document.getElementById('view-gender').textContent    = u.gender;
 
       // Input fields
-      if (u.fullname)  document.getElementById('fullname').value  = u.fullname;
+      if (u.fullName)  document.getElementById('fullName').value  = u.fullName;
       if (u.username)  document.getElementById('username').value  = u.username;
       if (u.email)     document.getElementById('email').value     = u.email;
       if (u.age)       document.getElementById('age').value       = u.age;
