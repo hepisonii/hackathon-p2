@@ -1,10 +1,9 @@
 const express = require("express");
 const User = require("../models/user");
 const Profile = require("../models/profile");
-const {cloudinary,upload} = require("../cloudConfig")
 const fs = require("fs");
 const Path = require("path")
-
+const {cloudinary, upload} = require("../cloudConfig")
 async function handleGetUserSignUp(req,res){
     return res.render("signup");
 }
@@ -80,26 +79,50 @@ async function handleGetUserLogout(req,res){
 }
 
 async function handleGetProfile(req,res){
-    const getUser = req.user;
-    const user = 
-        {
-        _id: getUser._id,
-        fullname: getUser.fullname,
-        gender: getUser.gender,
-        age: getUser.age,
-        profileImageURL: getUser.profileImageURL,
-        age: getUser.age,
-        role: getUser.role,
-    }
-    return res.render("profile", {
-        user
+    return res.sendFile(Path.resolve(__dirname, "../views/profile.html"))
+}
+
+async function handlePatchProfile(req, res) {
+  try {
+    const user = await User.findById(req.user._id);
+
+    // 🔐 Allowed fields
+    const allowedFields = ["fullname","username", "email", "gender", "age"];
+
+    // 🔄 Update body fields
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        user[field] = req.body[field];
+      }
     });
-}
 
-async function handlePatchProfile(req,res){
-    console.log("Body Patch: ", req.body);
-}
+    // 🖼️ Image update
+    if (req.file) {
+      // 1️⃣ Upload new image
+      const result = await cloudinary.uploader.upload(req.file.path);
 
+      // 2️⃣ Delete old image
+      if (user.profilePhotoId) {
+        await cloudinary.uploader.destroy(user.profilePhotoId);
+      }
+
+      // 3️⃣ Save new values
+      user.profileImageURL = result.secure_url;
+      user.profilePhotoId = result.public_id;
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      data: user
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Update failed" });
+  }
+}
 module.exports = {
     handleGetUserSignUp,
     handlePostUserSignUp,
