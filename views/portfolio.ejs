@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skill Swap — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0f14; --panel: #13161d; --panel-deep: #0f111a;
+      --border: #1f2330; --accent: #c8a96e;
+      --accent-glow: rgba(200,169,110,0.15); --accent-soft: rgba(200,169,110,0.07);
+      --text: #e8e6e0; --muted: #6b6f7c; --muted-light: #9a9eaa;
+      --input-bg: #191c25; --input-border: #252837; --input-focus: #c8a96e;
+      --error: #e07070; --success: #6ec8a0;
+    }
+    body {
+      min-height: 100vh; background: var(--bg);
+      font-family: 'DM Sans', sans-serif; color: var(--text);
+      padding: 48px 16px 80px; position: relative; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; top: -200px; left: 50%;
+      transform: translateX(-50%); width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(200,169,110,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    body::after {
+      content: ''; position: fixed; bottom: -150px; right: -100px;
+      width: 450px; height: 450px;
+      background: radial-gradient(ellipse, rgba(100,120,200,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* NAV */
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 900px; margin: 0 auto 48px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand-icon {
+      width: 34px; height: 34px; background: var(--accent); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-icon svg { width: 16px; height: 16px; fill: #0d0f14; }
+    .brand-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--accent); letter-spacing: 0.03em; }
+    .nav-btn {
+      padding: 8px 18px; border-radius: 10px; font-size: 0.82rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer;
+      transition: all 0.2s; text-decoration: none; letter-spacing: 0.02em;
+      background: none; border: 1px solid var(--border); color: var(--muted);
+    }
+    .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* LAYOUT */
+    .page-wrap {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start;
+    }
+
+    /* SIDEBAR */
+    .sidebar-card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 20px;
+      overflow: hidden; position: sticky; top: 32px; animation: fadeUp 0.5s ease both;
+    }
+    .sidebar-banner {
+      height: 72px;
+      background: linear-gradient(135deg, rgba(200,169,110,0.15), rgba(100,120,200,0.08));
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-body { padding: 0 22px 24px; margin-top: -32px; }
+    .avatar-wrap { position: relative; width: 64px; margin-bottom: 14px; }
+    .avatar-img {
+      width: 64px; height: 64px; border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--panel); box-shadow: 0 0 0 2px var(--accent); display: block;
+    }
+    .role-badge {
+      position: absolute; bottom: 2px; right: -4px;
+      padding: 3px 8px; border-radius: 20px;
+      font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+      background: rgba(200,169,110,0.15); color: var(--accent); border: 1px solid rgba(200,169,110,0.25);
+    }
+    .sidebar-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .sidebar-handle { font-size: 0.78rem; color: var(--muted); margin-bottom: 18px; }
+
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .stat-box {
+      background: var(--panel-deep); border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 10px; text-align: center;
+    }
+    .stat-value { font-size: 1.3rem; font-weight: 600; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .sidebar-divider { height: 1px; background: var(--border); margin: 16px 0; }
+    .sidebar-section-title {
+      font-size: 0.65rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+    }
+    .sidebar-category {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 20px;
+      background: rgba(200,169,110,0.1); color: var(--accent);
+      border: 1px solid rgba(200,169,110,0.2); font-size: 0.8rem; font-weight: 500;
+    }
+    .skills-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .skill-tag {
+      padding: 4px 10px; border-radius: 20px;
+      background: var(--panel-deep); border: 1px solid var(--border);
+      font-size: 0.74rem; color: var(--muted-light);
+    }
+
+    /* MAIN CARD */
+    .main-card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 20px;
+      overflow: hidden; animation: fadeUp 0.5s 0.1s ease both;
+    }
+    .main-card::before {
+      content: ''; display: block; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .card-header {
+      padding: 26px 32px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-header-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; color: var(--text); }
+    .card-header-sub { font-size: 0.76rem; color: var(--muted); margin-top: 3px; font-weight: 300; }
+
+    .card-body { padding: 28px 32px 32px; }
+
+    /* FLASH */
+    .flash-msg {
+      margin-bottom: 20px; padding: 12px 16px; border-radius: 10px; font-size: 0.85rem; display: none;
+    }
+    .flash-msg.success { background: rgba(110,200,160,0.1); border: 1px solid rgba(110,200,160,0.2); color: var(--success); display: block; }
+    .flash-msg.error   { background: rgba(224,112,112,0.08); border: 1px solid rgba(224,112,112,0.2); color: var(--error); display: block; }
+
+    /* FORM */
+    .section-title {
+      font-size: 0.68rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px;
+    }
+    .fields-grid { display: grid; gap: 18px; margin-bottom: 26px; }
+    .fields-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    label.field-label {
+      font-size: 0.7rem; font-weight: 500; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .field-hint { font-size: 0.72rem; color: var(--muted); margin-top: -2px; }
+
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      background: var(--input-bg); border: 1px solid var(--input-border);
+      border-radius: 10px; padding: 12px 14px; font-size: 0.9rem;
+      font-family: 'DM Sans', sans-serif; color: var(--text); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; width: 100%;
+    }
+    input::placeholder, textarea::placeholder { color: #3a3e4d; }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--input-focus); background: #1c1f2a;
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+    select option { background: var(--input-bg); color: var(--text); }
+
+    /* SKILLS INPUT */
+    .skills-input-wrap {
+      background: var(--input-bg); border: 1px solid var(--input-border);
+      border-radius: 10px; padding: 10px 12px; min-height: 52px;
+      display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+      cursor: text; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .skills-input-wrap:focus-within {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .skill-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px;
+      background: rgba(200,169,110,0.12); border: 1px solid rgba(200,169,110,0.22);
+      color: var(--accent); font-size: 0.78rem; font-weight: 500;
+    }
+    .skill-pill button {
+      background: none; border: none; cursor: pointer; padding: 0; line-height: 1;
+      color: var(--accent); opacity: 0.7; font-size: 1rem; display: flex; align-items: center;
+      transition: opacity 0.15s;
+    }
+    .skill-pill button:hover { opacity: 1; }
+    .skills-text-input {
+      flex: 1; min-width: 100px; background: none; border: none;
+      outline: none; font-size: 0.88rem; font-family: 'DM Sans', sans-serif;
+      color: var(--text); padding: 2px 4px;
+    }
+    .skills-text-input::placeholder { color: #3a3e4d; }
+    /* hidden inputs for skills array */
+    .skills-hidden { display: none; }
+
+    /* RATE INPUT */
+    .rate-wrap { position: relative; }
+    .rate-prefix {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-size: 0.9rem; pointer-events: none;
+    }
+    .rate-wrap input { padding-left: 28px; }
+
+    .section-divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+    /* SAVE ROW */
+    .save-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
+    .btn-cancel {
+      padding: 11px 22px; background: none; border: 1px solid var(--border); border-radius: 11px;
+      font-size: 0.85rem; font-family: 'DM Sans', sans-serif; color: var(--muted);
+      cursor: pointer; font-weight: 500; transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-cancel:hover { border-color: var(--muted-light); color: var(--text); }
+    .btn-save {
+      padding: 11px 28px; background: var(--accent); color: #0d0f14; border: none;
+      border-radius: 11px; font-size: 0.85rem; font-family: 'DM Sans', sans-serif;
+      font-weight: 600; cursor: pointer; letter-spacing: 0.04em;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .btn-save::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent); }
+    .btn-save:hover { opacity: 0.9; box-shadow: 0 4px 20px rgba(200,169,110,0.3); }
+    .btn-save:active { transform: scale(0.985); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 720px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      .sidebar-card { position: static; }
+      .fields-grid.cols-2 { grid-template-columns: 1fr; }
+      .card-header, .card-body { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8.5v7L12 19.5 5 15.5v-7l7-4.32z"/></svg>
+    </div>
+    <span class="brand-name">Skill Swap</span>
+  </a>
+  <a href="/dashboard" class="nav-btn">Dashboard</a>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar-card">
+    <div class="sidebar-banner"></div>
+    <div class="sidebar-body">
+      <div class="avatar-wrap">
+        <img
+          class="avatar-img"
+          id="sidebarAvatar"
+          src="<%= user.profileImageURL %>"
+          alt="<%= user.fullName %>"
+          onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.fullName) %>&background=191c25&color=c8a96e&size=64'"
+        />
+        <span class="role-badge">Mentor</span>
+      </div>
+      <p class="sidebar-name"><%= user.fullName %></p>
+      <p class="sidebar-handle">@<%= user.username %></p>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value" id="sidebarRating">
+            <%= mentor.rating ? mentor.rating.toFixed(1) : '—' %>
+          </div>
+          <div class="stat-label">Rating</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="sidebarSessions"><%= mentor.totalSessions || 0 %></div>
+          <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat-box" style="grid-column: 1 / -1;">
+          <div class="stat-value" id="sidebarRate">
+            $<%= mentor.hourlyRate || 0 %><span style="font-size:0.7rem;font-weight:400;color:var(--muted)">/hr</span>
+          </div>
+          <div class="stat-label">Hourly Rate</div>
+        </div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- Category -->
+      <p class="sidebar-section-title">Category</p>
+      <div id="sidebarCategory" class="sidebar-category" style="margin-bottom:16px">
+        <%= mentor.category || 'Not set' %>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- Skills preview -->
+      <p class="sidebar-section-title">Skills</p>
+      <div class="skills-list" id="sidebarSkills">
+        <% if (mentor.skills && mentor.skills.length > 0) { %>
+          <% mentor.skills.forEach(function(skill) { %>
+            <span class="skill-tag"><%= skill %></span>
+          <% }); %>
+        <% } else { %>
+          <span style="font-size:0.8rem;color:var(--muted)">No skills added yet</span>
+        <% } %>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CARD -->
+  <main class="main-card">
+    <div class="main-card" style="background:none;border:none;border-radius:0;overflow:visible;animation:none">
+    <div class="card-header">
+      <div>
+        <p class="card-header-title">Mentor Portfolio</p>
+        <p class="card-header-sub">Update your public mentor profile</p>
+      </div>
+    </div>
+
+    <div class="card-body">
+
+      <!-- Server flash messages -->
+      <% if (typeof successMsg !== 'undefined' && successMsg) { %>
+        <div class="flash-msg success"><%= successMsg %></div>
+      <% } %>
+      <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+        <div class="flash-msg error"><%= errorMsg %></div>
+      <% } %>
+      <div id="jsFlash" class="flash-msg"></div>
+
+      <form id="portfolioForm" action="/mentor/portfolio" method="POST" novalidate>
+
+        <!-- BIO -->
+        <p class="section-title">About You</p>
+        <div class="fields-grid" style="margin-bottom:26px">
+          <div class="field">
+            <label class="field-label" for="bio">Bio</label>
+            <textarea id="bio" name="bio" placeholder="Tell learners about your background, teaching style, and what you offer…"><%= mentor.bio || '' %></textarea>
+            <span class="field-hint">This shows on your public profile. Keep it genuine and concise.</span>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- CATEGORY + RATE -->
+        <p class="section-title">Expertise &amp; Pricing</p>
+        <div class="fields-grid cols-2" style="margin-bottom:26px">
+
+          <div class="field">
+            <label class="field-label" for="category">Category</label>
+            <select id="category" name="category" required>
+              <option value="" disabled <%= !mentor.category ? 'selected' : '' %>>Select a category</option>
+              <%
+                const categories = [
+                  'Technology', 'Design', 'Business', 'Marketing',
+                  'Music', 'Language', 'Finance', 'Health & Fitness',
+                  'Photography', 'Writing', 'Data Science', 'Other'
+                ];
+                categories.forEach(function(cat) {
+              %>
+                <option value="<%= cat %>" <%= mentor.category === cat ? 'selected' : '' %>><%= cat %></option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="hourlyRate">Hourly Rate (USD)</label>
+            <div class="rate-wrap">
+              <span class="rate-prefix">$</span>
+              <input
+                type="number"
+                id="hourlyRate"
+                name="hourlyRate"
+                min="0"
+                step="1"
+                placeholder="0"
+                value="<%= mentor.hourlyRate || '' %>"
+                required
+              />
+            </div>
+            <span class="field-hint">Set to 0 for free sessions.</span>
+          </div>
+
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- SKILLS -->
+        <p class="section-title">Skills</p>
+        <div class="field" style="margin-bottom:26px">
+          <label class="field-label">Your Skills</label>
+          <div class="skills-input-wrap" id="skillsWrap" onclick="document.getElementById('skillInput').focus()">
+            <!-- Existing skill pills rendered from DB -->
+            <% if (mentor.skills && mentor.skills.length > 0) { %>
+              <% mentor.skills.forEach(function(skill) { %>
+                <span class="skill-pill" data-skill="<%= skill %>">
+                  <%= skill %>
+                  <button type="button" onclick="removeSkill(this)" aria-label="Remove <%= skill %>">×</button>
+                  <input type="hidden" name="skills[]" value="<%= skill %>" class="skills-hidden" />
+                </span>
+              <% }); %>
+            <% } %>
+            <input
+              type="text"
+              id="skillInput"
+              class="skills-text-input"
+              placeholder="<%= (!mentor.skills || mentor.skills.length === 0) ? 'Type a skill and press Enter or comma…' : 'Add more…' %>"
+              autocomplete="off"
+            />
+          </div>
+          <span class="field-hint">Press Enter or comma to add a skill. Click × to remove.</span>
+        </div>
+
+        <div class="save-row">
+          <a href="/dashboard" class="btn-cancel">Cancel</a>
+          <button type="submit" class="btn-save">Save Portfolio</button>
+        </div>
+
+      </form>
+    </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  /* ── Skills tag input ── */
+  const skillInput = document.getElementById('skillInput');
+  const skillsWrap = document.getElementById('skillsWrap');
+
+  function getSkills() {
+    return Array.from(document.querySelectorAll('.skill-pill')).map(p => p.dataset.skill);
+  }
+
+  function addSkill(raw) {
+    const val = raw.trim().replace(/,+$/, '').trim();
+    if (!val) return;
+    if (getSkills().map(s => s.toLowerCase()).includes(val.toLowerCase())) return; // no duplicates
+
+    const pill = document.createElement('span');
+    pill.className = 'skill-pill';
+    pill.dataset.skill = val;
+    pill.innerHTML = `${val} <button type="button" onclick="removeSkill(this)" aria-label="Remove ${val}">×</button><input type="hidden" name="skills[]" value="${val}" class="skills-hidden" />`;
+    skillsWrap.insertBefore(pill, skillInput);
+    skillInput.value = '';
+    updateSidebarSkills();
+  }
+
+  function removeSkill(btn) {
+    btn.closest('.skill-pill').remove();
+    updateSidebarSkills();
+  }
+
+  skillInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); addSkill(this.value); }
+    if (e.key === 'Backspace' && this.value === '') {
+      const pills = document.querySelectorAll('.skill-pill');
+      if (pills.length) pills[pills.length - 1].remove();
+      updateSidebarSkills();
+    }
+  });
+  skillInput.addEventListener('input', function() {
+    if (this.value.includes(',')) {
+      this.value.split(',').forEach(s => addSkill(s));
+      this.value = '';
+    }
+  });
+
+  /* ── Sidebar live update ── */
+  function updateSidebarSkills() {
+    const skills = getSkills();
+    const container = document.getElementById('sidebarSkills');
+    if (skills.length === 0) {
+      container.innerHTML = '<span style="font-size:0.8rem;color:var(--muted)">No skills added yet</span>';
+      return;
+    }
+    container.innerHTML = skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+  }
+
+  document.getElementById('category').addEventListener('change', function() {
+    document.getElementById('sidebarCategory').textContent = this.value || 'Not set';
+  });
+
+  document.getElementById('hourlyRate').addEventListener('input', function() {
+    const val = parseFloat(this.value) || 0;
+    document.getElementById('sidebarRate').innerHTML =
+      `$${val}<span style="font-size:0.7rem;font-weight:400;color:var(--muted)">/hr</span>`;
+  });
+
+  /* ── Form validation before submit ── */
+  document.getElementById('portfolioForm').addEventListener('submit', function(e) {
+    const category = document.getElementById('category').value;
+    const hourlyRate = document.getElementById('hourlyRate').value;
+
+    if (!category) {
+      e.preventDefault();
+      showFlash('Please select a category.', 'error');
+      document.getElementById('category').focus();
+      return;
+    }
+    if (hourlyRate === '' || isNaN(Number(hourlyRate)) || Number(hourlyRate) < 0) {
+      e.preventDefault();
+      showFlash('Please enter a valid hourly rate (0 or more).', 'error');
+      document.getElementById('hourlyRate').focus();
+      return;
+    }
+  });
+
+  function showFlash(msg, type) {
+    const el = document.getElementById('jsFlash');
+    el.textContent = msg;
+    el.className = 'flash-msg ' + type;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setTimeout(() => { el.style.display = 'none'; }, 5000);
+  }
+</script>
+</body>
+</html>
