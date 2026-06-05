@@ -431,9 +431,9 @@
       usernameEl.textContent = user.username || user.fullname || 'User';
 
       // Set photo or fallback to initials
-      if (user.photo_url) {
+      if (user.profileImageURL) {
         const img = document.createElement('img');
-        img.src = user.photo_url;                   // ← your API should return this field
+        img.src = user.profileImageURL;                   // ← your API should return this field
         img.alt = user.username;
         avatarWrap.appendChild(img);
       } else {
