@@ -85,10 +85,20 @@ async function handleGetProfile(req,res){
 async function handlePatchProfile(req, res) {
   try {
     const user = await User.findById(req.user._id);
-
     // 🔐 Allowed fields
     const allowedFields = ["fullname","username", "email", "gender", "age"];
     console.log("Body: ",req.body);
+    // 🧠 Check username uniqueness
+    if (req.body.username && req.body.username !== user.username) {
+        const existingUser = await User.findOne({ username: req.body.username });
+
+    if (existingUser) {
+    return res.status(400).json({
+      success: false,
+      message: "Username already exists"
+    });
+  }
+}
     // 🔄 Update body fields
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {

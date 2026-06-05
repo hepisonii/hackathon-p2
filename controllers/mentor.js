@@ -4,7 +4,7 @@ const Profile = require("../models/profile");
 const Path = require("path");
 
 async function handleGetMentorProfile(req,res){
-    return res.sendFile(Path.resolve("../views/portfolio.html"));    
+    return res.sendFile(Path.resolve("./views/portfolio.html"));    
 }
 
 async function handlePatchMentorProfile(req,res){
