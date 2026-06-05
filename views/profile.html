@@ -360,7 +360,7 @@
       const avatarSrc = u.profileImageURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullname || 'User')}&background=191c25&color=6ea8c8&size=72`;
       document.getElementById('sidebarAvatar').src = avatarSrc;
       document.getElementById('uploadPreview').src  = avatarSrc;
-      if (u.fullName)  document.getElementById('sidebarName').textContent      = u.fullname;
+      if (u.fullname)  document.getElementById('sidebarName').textContent      = u.fullname;
       if (u.username)  document.getElementById('sidebarHandle').textContent    = '@' + u.username;
       if (u.email)     document.getElementById('sidebarEmail').textContent     = u.email;
       if (u.role)      document.getElementById('roleBadge').textContent        = u.role;
@@ -368,14 +368,14 @@
         (u.age || '') + (u.age && u.gender ? ' · ' : '') + (u.gender || '');
 
       // View mode divs
-      if (u.fullName)  document.getElementById('view-fullname').textContent  = u.fullname;
+      if (u.fullname)  document.getElementById('view-fullname').textContent  = u.fullname;
       if (u.username)  document.getElementById('view-username').textContent  = '@' + u.username;
       if (u.email)     document.getElementById('view-email').textContent     = u.email;
       if (u.age)       document.getElementById('view-age').textContent       = u.age;
       if (u.gender)    document.getElementById('view-gender').textContent    = u.gender;
 
       // Input fields
-      if (u.fullName)  document.getElementById('fullname').value  = u.fullname;
+      if (u.fullname)  document.getElementById('fullname').value  = u.fullname;
       if (u.username)  document.getElementById('username').value  = u.username;
       if (u.email)     document.getElementById('email').value     = u.email;
       if (u.age)       document.getElementById('age').value       = u.age;
@@ -427,7 +427,7 @@
     e.preventDefault();
 
     const val = id => document.getElementById(id).value.trim();
-    const fullName = val('fullname');
+    const fullname = val('fullname');
     const username = val('username');
     const email    = val('email');
     const age      = val('age');
@@ -454,9 +454,9 @@
       });
 
       if (res.ok) {
-        if (fullName) {
-          document.getElementById('sidebarName').textContent  = fullName;
-          document.getElementById('view-fullname').textContent = fullName;
+        if (fullname) {
+          document.getElementById('sidebarName').textContent  = fullname;
+          document.getElementById('view-fullname').textContent = fullname;
         }
         if (username) {
           document.getElementById('sidebarHandle').textContent = '@' + username;
