@@ -12,14 +12,12 @@ const mentorProfileSchema = new mongoose.Schema({
 
   category: {
     type: String,
-    required: true
   },
 
   skills: [String],
 
   hourlyRate: {
     type: Number,
-    required: true
   },
 
   rating: {
