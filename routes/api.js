@@ -5,16 +5,19 @@ const Profile = require("../models/profile");
 const apiRouter = express.Router();
 
 apiRouter.get("/user", (req,res) => {
-    const user ={
+    return res.status(200).json(
+      {
         _id: req.user._id,
         fullname: req.user.fullname,
+        username: req.user.username,
+        email: req.user.email,
         gender: req.user.gender,
         age: req.user.age,
         profileImageURL: req.user.profileImageURL,
         age: req.user.age,
         role: req.user.role,
     }
-    return res.json({user});
+    );
 })
 
 

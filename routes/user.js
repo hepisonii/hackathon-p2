@@ -20,5 +20,6 @@ userRouter.get("/login", handleGetUserLogin);
 userRouter.post("/login",limiter, handlePostUserLogin);
 userRouter.get("/logout", handleGetUserLogout);
 userRouter.get("/profile", handleGetProfile);
-userRouter.patch("/profile", handlePatchProfile)
+userRouter.patch("/profile", handlePatchProfile);
+
 module.exports = userRouter;
