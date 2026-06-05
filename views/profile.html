@@ -234,36 +234,30 @@
     <div class="sidebar-banner"></div>
     <div class="sidebar-body">
       <div class="avatar-wrap" id="avatarWrap" onclick="isEditing && triggerFileInput()">
-        <img
-          class="avatar-img"
-          id="sidebarAvatar"
-          src="<%= user.profileImageURL %>"
-          alt="<%= user.fullName %>"
-          onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.fullName) %>&background=191c25&color=6ea8c8&size=72'"
-        />
+        <img class="avatar-img" id="sidebarAvatar" src="" alt="Profile Photo" />
         <div class="avatar-overlay" id="avatarOverlay" style="display:none">
           <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
             <circle cx="12" cy="13" r="4"/>
           </svg>
         </div>
-        <span class="role-badge"><%= user.role || 'Learner' %></span>
+        <span class="role-badge" id="roleBadge">Learner</span>
       </div>
-      <p class="profile-name" id="sidebarName"><%= user.fullName %></p>
-      <p class="profile-handle" id="sidebarHandle">@<%= user.username %></p>
+      <p class="profile-name" id="sidebarName">—</p>
+      <p class="profile-handle" id="sidebarHandle">@—</p>
       <div class="meta-list">
         <div class="meta-item">
           <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
           </svg>
-          <span id="sidebarAgGender"><%= user.age %> · <%= user.gender %></span>
+          <span id="sidebarAgGender">—</span>
         </div>
         <div class="meta-item">
           <svg fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
             <polyline points="22,6 12,13 2,6"/>
           </svg>
-          <span id="sidebarEmail"><%= user.email %></span>
+          <span id="sidebarEmail">—</span>
         </div>
       </div>
     </div>
@@ -287,25 +281,14 @@
 
     <div class="card-body">
 
-      <!-- Flash messages from server (EJS) -->
-      <% if (typeof successMsg !== 'undefined' && successMsg) { %>
-        <div class="flash-msg success"><%= successMsg %></div>
-      <% } %>
-      <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
-        <div class="flash-msg error"><%= errorMsg %></div>
-      <% } %>
-
       <!-- JS flash -->
       <div id="jsFlash" class="flash-msg"></div>
 
-      <form id="profileForm" action="/user/profile" method="post" enctype="multipart/form-data" novalidate>
+      <form id="profileForm" novalidate>
 
         <!-- Profile Image (edit mode only) -->
         <div class="avatar-upload-row" id="avatarUploadRow">
-          <img class="avatar-upload-preview" id="uploadPreview"
-            src="<%= user.profileImageURL %>"
-            onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.fullName) %>&background=191c25&color=6ea8c8&size=52'"
-          />
+          <img class="avatar-upload-preview" id="uploadPreview" src="" alt="Preview" />
           <div class="avatar-upload-info">
             <p>Change your profile photo</p>
             <label class="avatar-upload-btn" for="profileImage">Choose image</label>
@@ -319,41 +302,37 @@
 
           <div class="field">
             <label class="field-label" for="fullName">Full Name</label>
-            <div class="field-value view-mode"><%= user.fullName %></div>
-            <input type="text" id="fullName" name="fullName" class="edit-mode" style="display:none"
-              value="<%= user.fullName %>" placeholder="Your full name" />
+            <div class="field-value view-mode" id="view-fullName">—</div>
+            <input type="text" id="fullName" name="fullName" class="edit-mode" style="display:none" placeholder="Your full name" />
           </div>
 
           <div class="field">
             <label class="field-label" for="username">Username</label>
-            <div class="field-value muted view-mode">@<%= user.username %></div>
-            <input type="text" id="username" name="username" class="edit-mode" style="display:none"
-              value="<%= user.username %>" placeholder="username" />
+            <div class="field-value muted view-mode" id="view-username">—</div>
+            <input type="text" id="username" name="username" class="edit-mode" style="display:none" placeholder="username" />
           </div>
 
           <div class="field">
             <label class="field-label" for="email">Email</label>
-            <div class="field-value muted view-mode"><%= user.email %></div>
-            <input type="email" id="email" name="email" class="edit-mode" style="display:none"
-              value="<%= user.email %>" placeholder="you@example.com" />
+            <div class="field-value muted view-mode" id="view-email">—</div>
+            <input type="email" id="email" name="email" class="edit-mode" style="display:none" placeholder="you@example.com" />
           </div>
 
           <div class="field">
             <label class="field-label" for="age">Age</label>
-            <div class="field-value view-mode"><%= user.age %></div>
-            <input type="number" id="age" name="age" class="edit-mode" style="display:none"
-              value="<%= user.age %>" min="13" max="100" placeholder="Age" />
+            <div class="field-value view-mode" id="view-age">—</div>
+            <input type="number" id="age" name="age" class="edit-mode" style="display:none" min="13" max="100" placeholder="Age" />
           </div>
 
           <div class="field" style="grid-column: 1 / -1;">
             <label class="field-label" for="gender">Gender</label>
-            <div class="field-value view-mode"><%= user.gender %></div>
+            <div class="field-value view-mode" id="view-gender">—</div>
             <select id="gender" name="gender" class="edit-mode" style="display:none">
-              <option value="" disabled>Select gender</option>
-              <option value="Male" <%= user.gender === 'Male' ? 'selected' : '' %>>Male</option>
-              <option value="Female" <%= user.gender === 'Female' ? 'selected' : '' %>>Female</option>
-              <option value="Non-binary" <%= user.gender === 'Non-binary' ? 'selected' : '' %>>Non-binary</option>
-              <option value="Prefer not to say" <%= user.gender === 'Prefer not to say' ? 'selected' : '' %>>Prefer not to say</option>
+              <option value="" disabled selected>Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Non-binary">Non-binary</option>
+              <option value="Prefer not to say">Prefer not to say</option>
             </select>
           </div>
 
@@ -372,45 +351,36 @@
 <script>
   let isEditing = false;
 
-  /* Fetch user from API and prime the page */
   async function loadUser() {
     try {
       const res = await fetch('/api/user');
       if (!res.ok) return;
       const u = await res.json();
-      /* Sidebar */
-      if (u.profileImageURL) {
-        document.getElementById('sidebarAvatar').src = u.profileImageURL;
-        document.getElementById('uploadPreview').src  = u.profileImageURL;
-      }
-      if (u.fullName)  document.getElementById('sidebarName').textContent = u.fullName;
-      if (u.username)  document.getElementById('sidebarHandle').textContent = '@' + u.username;
-      if (u.email)     document.getElementById('sidebarEmail').textContent = u.email;
-      if (u.age || u.gender)
-        document.getElementById('sidebarAgGender').textContent = (u.age || '') + (u.age && u.gender ? ' · ' : '') + (u.gender || '');
 
-      /* Form inputs */
-      const set = (id, val) => { if (document.getElementById(id) && val !== undefined) document.getElementById(id).value = val; };
-      set('fullName', u.fullName);
-      set('username', u.username);
-      set('email', u.email);
-      set('age', u.age);
-      set('gender', u.gender);
-      /* Refresh view-mode divs from loaded data */
-      const viewFields = [
-        ['fullName', u.fullName],
-        ['username', u.username ? '@' + u.username : null],
-        ['email', u.email],
-        ['age', u.age],
-        ['gender', u.gender],
-      ];
-      viewFields.forEach(([id, val]) => {
-        if (!val) return;
-        const inp = document.getElementById(id);
-        if (!inp) return;
-        const viewEl = inp.closest('.field').querySelector('.view-mode');
-        if (viewEl) viewEl.textContent = val;
-      });
+      // Sidebar
+      const avatarSrc = u.profileImageURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName || 'User')}&background=191c25&color=6ea8c8&size=72`;
+      document.getElementById('sidebarAvatar').src = avatarSrc;
+      document.getElementById('uploadPreview').src  = avatarSrc;
+      if (u.fullName)  document.getElementById('sidebarName').textContent      = u.fullName;
+      if (u.username)  document.getElementById('sidebarHandle').textContent    = '@' + u.username;
+      if (u.email)     document.getElementById('sidebarEmail').textContent     = u.email;
+      if (u.role)      document.getElementById('roleBadge').textContent        = u.role;
+      document.getElementById('sidebarAgGender').textContent =
+        (u.age || '') + (u.age && u.gender ? ' · ' : '') + (u.gender || '');
+
+      // View mode divs
+      if (u.fullName)  document.getElementById('view-fullName').textContent  = u.fullName;
+      if (u.username)  document.getElementById('view-username').textContent  = '@' + u.username;
+      if (u.email)     document.getElementById('view-email').textContent     = u.email;
+      if (u.age)       document.getElementById('view-age').textContent       = u.age;
+      if (u.gender)    document.getElementById('view-gender').textContent    = u.gender;
+
+      // Input fields
+      if (u.fullName)  document.getElementById('fullName').value  = u.fullName;
+      if (u.username)  document.getElementById('username').value  = u.username;
+      if (u.email)     document.getElementById('email').value     = u.email;
+      if (u.age)       document.getElementById('age').value       = u.age;
+      if (u.gender)    document.getElementById('gender').value    = u.gender;
 
     } catch (e) {
       console.error('Failed to load user from /api/user', e);
@@ -419,7 +389,6 @@
 
   loadUser();
 
-  /* Toggle edit / view mode */
   function toggleEdit() {
     isEditing = !isEditing;
 
@@ -444,12 +413,10 @@
 
   function cancelEdit() { if (isEditing) toggleEdit(); }
 
-  /* Click on avatar in edit mode triggers file input */
   function triggerFileInput() {
     if (isEditing) document.getElementById('profileImage').click();
   }
 
-  /* Live preview of chosen image in sidebar + upload row */
   function previewImage(input) {
     if (!input.files || !input.files[0]) return;
     const url = URL.createObjectURL(input.files[0]);
@@ -457,8 +424,9 @@
     document.getElementById('uploadPreview').src  = url;
   }
 
-  /* On submit: update sidebar live, then let the form POST */
-  document.getElementById('profileForm').addEventListener('submit', function() {
+  document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
     const val = id => document.getElementById(id).value.trim();
     const fullName = val('fullName');
     const username = val('username');
@@ -466,12 +434,58 @@
     const age      = val('age');
     const gender   = val('gender');
 
-    if (fullName)  document.getElementById('sidebarName').textContent    = fullName;
-    if (username)  document.getElementById('sidebarHandle').textContent  = '@' + username;
-    if (email)     document.getElementById('sidebarEmail').textContent   = email;
-    if (age || gender)
-      document.getElementById('sidebarAgGender').textContent = age + (age && gender ? ' · ' : '') + gender;
-    /* form submits normally to POST /user/profile */
+    const formData = new FormData();
+    formData.append('fullName', fullName);
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('age', age);
+    formData.append('gender', gender);
+
+    const imageInput = document.getElementById('profileImage');
+    if (imageInput.files && imageInput.files[0]) {
+      formData.append('profileImage', imageInput.files[0]);
+    }
+
+    const flash = document.getElementById('jsFlash');
+
+    try {
+      const res = await fetch('/user/profile', {
+        method: 'PUT',
+        body: formData
+      });
+
+      if (res.ok) {
+        if (fullName) {
+          document.getElementById('sidebarName').textContent  = fullName;
+          document.getElementById('view-fullName').textContent = fullName;
+        }
+        if (username) {
+          document.getElementById('sidebarHandle').textContent = '@' + username;
+          document.getElementById('view-username').textContent  = '@' + username;
+        }
+        if (email) {
+          document.getElementById('sidebarEmail').textContent = email;
+          document.getElementById('view-email').textContent   = email;
+        }
+        if (age) document.getElementById('view-age').textContent = age;
+        if (gender) document.getElementById('view-gender').textContent = gender;
+        if (age || gender)
+          document.getElementById('sidebarAgGender').textContent = age + (age && gender ? ' · ' : '') + gender;
+
+        flash.className = 'flash-msg success';
+        flash.textContent = 'Profile updated successfully!';
+        cancelEdit();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        flash.className = 'flash-msg error';
+        flash.textContent = data.message || 'Something went wrong. Please try again.';
+      }
+
+      flash.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (err) {
+      flash.className = 'flash-msg error';
+      flash.textContent = 'Network error. Please try again.';
+    }
   });
 </script>
 </body>
