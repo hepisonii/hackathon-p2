@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skill Swap — About Us</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f14;
+      --panel: #13161d;
+      --border: #1f2330;
+      --accent: #c8a96e;
+      --accent-glow: rgba(200,169,110,0.15);
+      --accent-glow-strong: rgba(200,169,110,0.25);
+      --text: #e8e6e0;
+      --muted: #6b6f7c;
+      --input-bg: #191c25;
+      --input-border: #252837;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      padding: 40px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(200,169,110,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -150px; right: -100px;
+      width: 450px; height: 450px;
+      background: radial-gradient(ellipse, rgba(100,120,200,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      background: rgba(13,15,20,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .brand-icon {
+      width: 34px; height: 34px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-icon svg { width: 16px; height: 16px; fill: #0d0f14; }
+    .brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      letter-spacing: 0.03em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+    .nav-btn {
+      padding: 8px 20px;
+      background: var(--accent);
+      color: #0d0f14;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-btn:hover { opacity: 0.85; }
+
+    /* MAIN */
+    main {
+      width: 100%;
+      max-width: 680px;
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .page-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      border: 1px solid rgba(200,169,110,0.3);
+      border-radius: 99px;
+      padding: 4px 14px;
+      margin-bottom: 16px;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* CARD CAROUSEL */
+    .carousel-wrap {
+      position: relative;
+      animation: fadeUp 0.6s ease 0.15s both;
+    }
+
+    .cards-container {
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    .cards-track {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card {
+      min-width: 100%;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 44px 44px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 40px; right: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      border-radius: 0 0 2px 2px;
+    }
+
+    .card-number {
+      position: absolute;
+      top: 36px; right: 44px;
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      font-weight: 700;
+      color: rgba(200,169,110,0.08);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .card-icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      background: rgba(200,169,110,0.1);
+      border: 1px solid rgba(200,169,110,0.2);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+    }
+    .card-icon-wrap svg {
+      width: 24px; height: 24px;
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.25;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 16px;
+    }
+
+    /* Feature list */
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.87rem;
+      color: var(--text);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    .feature-list li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    /* Stat grid */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .stat-box {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    /* Team grid */
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .team-card {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .team-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0d0f14;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .team-info p {
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 2px;
+      line-height: 1.3;
+    }
+    .team-info span {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    /* Step list */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 20px;
+    }
+    .step-item {
+      display: flex;
+      gap: 16px;
+      position: relative;
+    }
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 36px;
+      bottom: -8px;
+      width: 1px;
+      background: var(--border);
+    }
+    .step-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(200,169,110,0.12);
+      border: 1px solid rgba(200,169,110,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-body {
+      padding-bottom: 20px;
+    }
+    .step-body strong {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .step-body span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* CTA card extras */
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      padding: 12px 28px;
+      background: var(--accent);
+      color: #0d0f14;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s, box-shadow 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { opacity: 0.88; box-shadow: 0 4px 20px rgba(200,169,110,0.3); }
+    .btn-secondary {
+      padding: 12px 28px;
+      background: transparent;
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: 1px solid rgba(200,169,110,0.35);
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { background: rgba(200,169,110,0.07); border-color: var(--accent); }
+
+    /* NAVIGATION */
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 24px;
+    }
+
+    .nav-arrows {
+      display: flex;
+      gap: 10px;
+    }
+    .arrow-btn {
+      padding: 10px 22px;
+      border-radius: 10px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .arrow-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(200,169,110,0.07);
+    }
+    .arrow-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .dot-nav {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, width 0.3s;
+    }
+    .dot.active {
+      background: var(--accent);
+      width: 22px;
+      border-radius: 3px;
+    }
+
+    .card-counter {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .card-counter span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 560px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .card { padding: 32px 22px 28px; }
+      .card-number { font-size: 3rem; top: 28px; right: 22px; }
+      .stat-grid, .team-grid { grid-template-columns: 1fr; }
+      .page-header h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="brand" href="#">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8.5v7L12 19.5 5 15.5v-7l7-4.32z"/>
+      </svg>
+    </div>
+    <span class="brand-name">Skill Swap</span>
+  </a>
+
+</nav>
+
+<main>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="page-tag">Our Story</div>
+    <h1>Built for curious minds,<br/>by passionate people.</h1>
+    <p>Five things you should know about SkillSwap — swipe through our story.</p>
+  </div>
+
+  <!-- Carousel -->
+  <div class="carousel-wrap">
+    <div class="cards-container">
+      <div class="cards-track" id="track">
+
+        <!-- CARD 1: The Problem -->
+        <div class="card">
+          <div class="card-number">01</div>
+          <div class="card-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div class="card-tag">The Problem</div>
+          <h2>Learning is expensive.<br/>Talent goes unnoticed.</h2>
+          <p>Millions of students and professionals want to grow their skills every day — but traditional classes are expensive, inflexible, and often disconnected from real-world needs.</p>
+          <p>At the same time, skilled individuals sit on goldmines of knowledge with no easy way to share it, teach it, or earn from it on their own schedule.</p>
+          <ul class="feature-list">
+            <li>Formal education costs are rising faster than inflation</li>
+            <li>Skilled people have no simple platform to monetize their expertise</li>
+            <li>Learners and mentors in the same city can't find each other</li>
+            <li>Generic online courses feel impersonal and one-size-fits-all</li>
+          </ul>
+        </div>
+
+        <!-- CARD 2: The Solution -->
+        <div class="card">
+          <div class="card-number">02</div>
+          <div class="card-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="card-tag">The Solution</div>
+          <h2>SkillSwap — where knowledge finds its match.</h2>
+          <p>SkillSwap is a peer-to-peer skill sharing and mentorship platform that directly connects learners with skilled mentors in their city and beyond — at a fraction of traditional costs.</p>
+          <p>Whether you want to learn guitar, crack coding interviews, master graphic design, or improve your public speaking — there's a mentor here for you.</p>
+          <div class="stat-grid">
+            <div class="stat-box">
+              <div class="stat-val">1:1</div>
+              <div class="stat-label">Personal sessions with real mentors</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">10+</div>
+              <div class="stat-label">Skill categories available</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">Flexible</div>
+              <div class="stat-label">Book on your own schedule</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">Both</div>
+              <div class="stat-label">Be a learner and mentor at once</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: How it Works -->
+        <div class="card">
+          <div class="card-number">03</div>
+          <div class="card-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div class="card-tag">How It Works</div>
+          <h2>Simple. Transparent. Effective.</h2>
+          <p>Getting started on SkillSwap takes less than 2 minutes. Here's how the journey looks from signup to your first session.</p>
+          <div class="step-list">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <strong>Create your profile</strong>
+                <span>Sign up as a Learner, Mentor, or both. Add your skills, bio, location and photo.</span>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <strong>Browse or list skills</strong>
+                <span>Learners search by category, price, location & rating. Mentors create sessions with timings and pricing.</span>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <strong>Book a session</strong>
+                <span>Pick a time slot, confirm your booking. Our system prevents double-bookings automatically.</span>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-body">
+                <strong>Learn, teach & grow</strong>
+                <span>Complete your session and leave a rating. Track your learning journey on your dashboard.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: Features -->
+        <div class="card">
+          <div class="card-number">04</div>
+          <div class="card-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <div class="card-tag">Platform Features</div>
+          <h2>Everything you need to learn and teach.</h2>
+          <p>SkillSwap is built with features that make the experience smooth for both sides of the table.</p>
+          <ul class="feature-list">
+            <li>Smart booking system with real-time availability — no overlapping sessions</li>
+            <li>Dual-role accounts — be a learner and a mentor simultaneously</li>
+            <li>Mentor dashboard with earnings overview and session tracking</li>
+            <li>Learner dashboard with upcoming sessions and full history</li>
+            <li>Session ratings and reviews to build trust in the community</li>
+            <li>Category filters — Programming, Design, Music, Languages & more</li>
+            <li>Location-based mentor recommendations for in-person sessions</li>
+            <li>Session status flow — Pending → Confirmed → Completed</li>
+          </ul>
+        </div>
+
+        <!-- CARD 5: CTA / Team -->
+        <div class="card">
+          <div class="card-number">05</div>
+          <div class="card-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+              <path d="M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+          <div class="card-tag">The Team</div>
+          <h2>Built with passion,<br/>shipped with purpose.</h2>
+          <p>SkillSwap was born from a hackathon idea and grew into a platform driven by a team that believes knowledge should flow freely between people.</p>
+          <div class="team-grid">
+            <div class="team-card">
+              <div class="team-avatar">A</div>
+              <div class="team-info">
+                <p>Aryan Shah</p>
+                <span>Fullstack & Backend</span>
+              </div>
+            </div>
+            <div class="team-card">
+              <div class="team-avatar">P</div>
+              <div class="team-info">
+                <p>Priya Mehta</p>
+                <span>UI/UX & Frontend</span>
+              </div>
+            </div>
+            <div class="team-card">
+              <div class="team-avatar">R</div>
+              <div class="team-info">
+                <p>Rohan Nair</p>
+                <span>Database & DevOps</span>
+              </div>
+            </div>
+            <div class="team-card">
+              <div class="team-avatar">S</div>
+              <div class="team-info">
+                <p>Sneha Rao</p>
+                <span>Product & Research</span>
+              </div>
+            </div>
+          </div>
+          <div class="cta-actions">
+            <a href="/user/signup" class="btn-primary">Start Now</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="nav-controls">
+      <div class="nav-arrows">
+        <button class="arrow-btn" id="prev" onclick="move(-1)" disabled>← Previous</button>
+        <button class="arrow-btn" id="next" onclick="move(1)">Next →</button>
+      </div>
+
+      <div class="dot-nav" id="dots"></div>
+
+      <div class="card-counter">
+        <span id="cur">1</span> / 5
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const total = 5;
+  let current = 0;
+
+  const track   = document.getElementById('track');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const curEl   = document.getElementById('cur');
+  const dotsEl  = document.getElementById('dots');
+
+  // Build dots
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(idx) {
+    current = idx;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    curEl.textContent = current + 1;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  function move(dir) {
+    const next = current + dir;
+    if (next >= 0 && next < total) goTo(next);
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') move(1);
+    if (e.key === 'ArrowLeft')  move(-1);
+  });
+
+  // Touch swipe
+  let startX = 0;
+  track.addEventListener('touchstart', e => startX = e.touches[0].clientX, { passive: true });
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) move(diff > 0 ? 1 : -1);
+  });
+</script>
+
+</body>
+</html>
