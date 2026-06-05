@@ -8,8 +8,9 @@ const {connectMongoDB} = require("./connections/database");
 const Path = require("path");
 const cookieParser = require("cookie-parser");
 const {checkAuth} = require("./middlewares/auth");
-const userRouter = require("./routes/user")
-const apiRouter = require("./routes/api")
+const userRouter = require("./routes/user");
+const apiRouter = require("./routes/api");
+const mentorRouter = require("./routes/mentor");
 connectMongoDB(process.env.MONGODB_URL);
 
 app.use(express.json());

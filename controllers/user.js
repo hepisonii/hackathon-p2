@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../models/user");
+const Profile = require("../models/profile");
 const {cloudinary,upload} = require("../cloudConfig")
 const fs = require("fs");
 const Path = require("path")
@@ -38,9 +39,13 @@ if (req.file) {
         profileImageURL: imageUrl,
         profileImageId
     });
+    if(role === "mentor"){
+        await Profile.create({
+            createdBy: user._id
+        });
+    }
     return res.redirect("/about");
 }
-
 
 async function handleGetUserLogin(req,res){
     return res.render("login");

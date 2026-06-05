@@ -2,9 +2,9 @@
 const mongoose = require("mongoose");
 
 const mentorProfileSchema = new mongoose.Schema({
-  user: {
+  createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "user",
     unique: true
   },
 
