@@ -80,11 +80,24 @@ async function handleGetUserLogout(req,res){
 }
 
 async function handleGetProfile(req,res){
-    return res.sendFile(Path.resolve(__dirname, "../views/profile.html"));
+    const getUser = req.user;
+    const user = 
+        {
+        _id: getUser._id,
+        fullname: getUser.fullname,
+        gender: getUser.gender,
+        age: getUser.age,
+        profileImageURL: getUser.profileImageURL,
+        age: getUser.age,
+        role: getUser.role,
+    }
+    return res.render("profile", {
+        user
+    });
 }
 
-async function handlePostProfile(req,res){
-    
+async function handlePatchProfile(req,res){
+    console.log("Body Patch: ", req.body);
 }
 
 module.exports = {
@@ -94,5 +107,5 @@ module.exports = {
     handlePostUserLogin,
     handleGetUserLogout,
     handleGetProfile,
-    handlePostProfile
+    handlePatchProfile
 }

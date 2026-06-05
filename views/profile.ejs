@@ -298,7 +298,7 @@
       <!-- JS flash -->
       <div id="jsFlash" class="flash-msg"></div>
 
-      <form id="profileForm" action="/user/profile" method="POST" enctype="multipart/form-data" novalidate>
+      <form id="profileForm" action="/user/profile" method="post" enctype="multipart/form-data" novalidate>
 
         <!-- Profile Image (edit mode only) -->
         <div class="avatar-upload-row" id="avatarUploadRow">
@@ -377,9 +377,7 @@
     try {
       const res = await fetch('/api/user');
       if (!res.ok) return;
-      const data = await res.json();
-      const u = data.user || data;
-
+      const u = await res.json();
       /* Sidebar */
       if (u.profileImageURL) {
         document.getElementById('sidebarAvatar').src = u.profileImageURL;
