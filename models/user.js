@@ -2,7 +2,49 @@ const {Schema, model} = require("mongoose")
 const {createHmac, randomBytes} = require("crypto");
 const {setToken} = require("../services/auth")
 const userSchema = new Schema({
-    
+    fullname: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    age: {
+        type: Number,
+        required: true,
+    },
+    gender: {
+        type: String,
+        required: true,
+    },
+    profileImageURL: {
+        type: String,
+    },
+    salt: {
+        type: String,
+    },
+    profilePhotoId: {
+        type: String,
+    },
+    bio: {
+        type: String,
+    },
+    skills: {
+        type: String,
+    },
+    location: {
+        type: String,
+    },
+    rating: {
+        type: Number,
+    },
 }, {timestamps: true});
 
 userSchema.pre("save", async function (){
