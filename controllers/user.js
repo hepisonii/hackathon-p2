@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const {cloudinary,upload} = require("../cloudConfig")
 const fs = require("fs");
-
+const Path = require("path")
 
 async function handleGetUserSignUp(req,res){
     return res.render("signup");
@@ -72,10 +72,20 @@ async function handleGetUserLogout(req,res){
     return res.redirect("/user/login");
 }
 
+async function handleGetProfile(req,res){
+    return res.sendFile(Path.resolve(__dirname, "../views/profile.html"));
+}
+
+async function handlePostProfile(req,res){
+    
+}
+
 module.exports = {
     handleGetUserSignUp,
     handlePostUserSignUp,
     handleGetUserLogin,
     handlePostUserLogin,
     handleGetUserLogout,
+    handleGetProfile,
+    handlePostProfile
 }

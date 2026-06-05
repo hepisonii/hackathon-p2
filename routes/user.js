@@ -7,7 +7,7 @@ const {
     handleGetUserLogin,
     handlePostUserLogin,
     handleGetUserLogout,
-    handlePostStartInterview
+    handleGetProfile,
 } = require("../controllers/user");
 const { limiter } = require("../middlewares/auth");
 
@@ -18,5 +18,5 @@ userRouter.post("/signup",upload.single("photo"), handlePostUserSignUp);
 userRouter.get("/login", handleGetUserLogin);
 userRouter.post("/login",limiter, handlePostUserLogin);
 userRouter.get("/logout", handleGetUserLogout);
-
+userRouter.get("/profile/:name", handleGetProfile);
 module.exports = userRouter;
