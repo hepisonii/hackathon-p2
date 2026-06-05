@@ -17,12 +17,22 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(checkAuth());
 
-app.use("/user", userRouter);
-
-app.use("/api", apiRouter);
-
 app.set("view engine","ejs")
 app.set("views", Path.resolve("./views"));
+
+app.use("/user", userRouter);
+app.use("/api", apiRouter);
+
+app.get("/", (req,res) => {
+    const user = req.user;
+    if(!user)
+        return res.redirect("/user/login");
+    return res.sendFile(Path.resolve(__dirname, "./views/home.html"));
+});
+
+app.get("/about", (req,res) => {
+    return res.sendFile(Path.resolve(__dirname, "./views/about_us.html"));
+})
 
 app.listen(PORT, () => {
     console.log("Server Started");

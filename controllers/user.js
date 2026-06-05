@@ -38,7 +38,7 @@ if (req.file) {
         profileImageURL: imageUrl,
         profileImageId
     });
-    return res.redirect("/user/login");
+    return res.redirect("/about");
 }
 
 
