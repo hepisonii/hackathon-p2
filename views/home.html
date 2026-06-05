@@ -78,8 +78,6 @@
       letter-spacing: 0.03em;
     }
 
-
-
     .sb-nav {
       flex: 1;
       overflow-y: auto;
@@ -231,15 +229,10 @@
       justify-content: center;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-    }
     .empty-state p {
       font-size: 0.9rem;
       color: var(--muted);
       font-weight: 300;
-      margin-top: 10px;
     }
 
     /* inbox panel */
@@ -304,6 +297,7 @@
 
 <!-- ── SIDEBAR ── -->
 <aside class="sidebar">
+
   <a class="sb-brand" href="#">
     <div class="sb-brand-icon">
       <svg viewBox="0 0 24 24"><path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8.5v7L12 19.5 5 15.5v-7l7-4.32z"/></svg>
@@ -349,6 +343,16 @@
       Profile
     </a>
 
+    <!-- Portfolio — hidden by default, shown only when role = mentor -->
+    <a class="sb-item" href="/portfolio" id="sb-portfolio" style="display:none;">
+      <span class="sb-icon">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+        </svg>
+      </span>
+      Portfolio
+    </a>
+
     <a class="sb-item" href="/payments">
       <span class="sb-icon">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -360,13 +364,12 @@
 
   </nav>
 
-  <!-- user at bottom — populated from API -->
+  <!-- user at bottom — name + photo pulled from API -->
   <div class="sb-user">
-    <div class="sb-avatar" id="sb-avatar-wrap">
-      <!-- photo injected by JS if available, else initials -->
-    </div>
+    <div class="sb-avatar" id="sb-avatar-wrap"></div>
     <div class="sb-user-name" id="sb-username">Loading...</div>
   </div>
+
 </aside>
 
 <!-- ── TOPBAR ── -->
@@ -375,7 +378,8 @@
   <button class="inbox-btn" onclick="toggleInbox()" aria-label="Open inbox">
     <div class="inbox-dot"></div>
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+      <polyline points="22,6 12,13 2,6"/>
     </svg>
     <span class="inbox-btn-label">Inbox</span>
   </button>
@@ -417,11 +421,17 @@
     });
   });
 
-  // ── FETCH LOGGED-IN USER FROM API ──
-  // Replace this URL with your actual API endpoint
+  // ── FETCH USER FROM API ──
+  // Replace '/api/user/me' with your actual route.
+  // Expected response shape:
+  // {
+  //   username: "aryan_shah",    ← displayed as the name
+  //   photo_url: "/uploads/...", ← profile photo (optional)
+  //   role: "mentor"             ← "mentor" shows Portfolio link, anything else hides it
+  // }
   async function loadUser() {
     try {
-      const res = await fetch('/api/user');       // ← replace with your route
+      const res = await fetch('/api/user');   // ← replace with your route
       const user = await res.json();
 
       const avatarWrap = document.getElementById('sb-avatar-wrap');
@@ -430,19 +440,24 @@
       // Set username
       usernameEl.textContent = user.username || user.fullname || 'User';
 
-      // Set photo or fallback to initials
-      if (user.profileImageURL) {
+      // Set photo or fall back to first initial
+      if (user.photo_url) {
         const img = document.createElement('img');
-        img.src = user.profileImageURL;                   // ← your API should return this field
-        img.alt = user.username;
+        img.src = user.photo_url;               // ← your API should return this field
+        img.alt = user.username || 'User';
         avatarWrap.appendChild(img);
       } else {
         const name = user.username || user.fullname || '?';
         avatarWrap.textContent = name.charAt(0).toUpperCase();
       }
 
+      // Show Portfolio link only if role is mentor
+      if (user.role === 'mentor') {
+        document.getElementById('sb-portfolio').style.display = 'flex';
+      }
+
     } catch (err) {
-      // Fallback if API fails
+      // Fallback if API fails or user is not logged in
       document.getElementById('sb-username').textContent = 'Guest';
       document.getElementById('sb-avatar-wrap').textContent = 'G';
     }
