@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create Account</title>
+  <title>Skill Swap — Create Account</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -243,39 +243,93 @@
       height: 1px; background: var(--border);
     }
 
-    /* Mentor banner */
-    .mentor-banner {
-      background: linear-gradient(135deg, rgba(200,169,110,0.08), rgba(200,169,110,0.04));
-      border: 1px solid rgba(200,169,110,0.2);
-      border-radius: 12px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* Role selector */
+    .role-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
       margin-bottom: 24px;
-      text-decoration: none;
-      transition: background 0.2s, border-color 0.2s;
+    }
+    .role-card {
+      position: relative;
       cursor: pointer;
     }
-    .mentor-banner:hover {
-      background: linear-gradient(135deg, rgba(200,169,110,0.13), rgba(200,169,110,0.07));
+    .role-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+    .role-card-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 14px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      border-radius: 12px;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      text-align: center;
+    }
+    .role-card:hover .role-card-inner {
       border-color: rgba(200,169,110,0.4);
+      background: #1c1f2a;
     }
-    .mentor-banner-left { display: flex; align-items: center; gap: 11px; }
-    .mentor-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: rgba(200,169,110,0.15);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    .role-card input[type="radio"]:checked + .role-card-inner {
+      border-color: var(--accent);
+      background: rgba(200,169,110,0.07);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
-    .mentor-icon svg { width: 16px; height: 16px; }
-    .mentor-text strong {
-      display: block; font-size: 0.82rem; font-weight: 500;
-      color: var(--accent); margin-bottom: 1px;
+    .role-icon-wrap {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(200,169,110,0.12);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
     }
-    .mentor-text span { font-size: 0.75rem; color: var(--muted); }
-    .mentor-banner-arrow { color: var(--accent); opacity: 0.7; flex-shrink: 0; }
-    .mentor-banner-arrow svg { width: 16px; height: 16px; }
+    .role-card input[type="radio"]:checked + .role-card-inner .role-icon-wrap {
+      background: rgba(200,169,110,0.22);
+    }
+    .role-icon-wrap svg { width: 18px; height: 18px; }
+    .role-label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .role-card input[type="radio"]:checked + .role-card-inner .role-label {
+      color: var(--accent);
+    }
+    .role-desc {
+      font-size: 0.72rem;
+      color: #4a4e5c;
+      font-weight: 300;
+      line-height: 1.4;
+      transition: color 0.2s;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .role-card input[type="radio"]:checked + .role-card-inner .role-desc {
+      color: var(--muted);
+    }
+    .role-check {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .role-card input[type="radio"]:checked ~ .role-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .role-check svg { width: 10px; height: 10px; }
 
     .btn-submit {
       width: 100%;
@@ -318,6 +372,7 @@
     @media (max-width: 520px) {
       .card { padding: 36px 22px 32px; }
       .row.cols-2 { grid-template-columns: 1fr; }
+      .role-selector { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -332,19 +387,17 @@
         <path d="M12 2L3 7v10l9 5 9-5V7L12 2zm0 2.18L19 8.5v7L12 19.5 5 15.5v-7l7-4.32z"/>
       </svg>
     </div>
-    <span class="brand-name">Eventure</span>
+    <span class="brand-name">Skill Swap</span>
   </div>
 
   <h1>Create your account</h1>
-  <p class="subtitle">Join thousands discovering unforgettable experiences.</p>
+  <p class="subtitle">Learn from experts or share your skills with the world.</p>
 
   <% if (typeof error !== 'undefined' && error) { %>
     <p class="error-msg"><%= error %></p>
   <% } %>
 
   <form action="/user/signup" method="POST" enctype="multipart/form-data" novalidate>
-
-    <input type="hidden" name="role" value="learner" />
 
     <!-- Profile Photo -->
     <div class="row cols-1">
@@ -422,30 +475,52 @@
       </div>
     </div>
 
-    <div class="divider">options</div>
+    <div class="divider">I want to join as</div>
 
-    <!-- Mentor Banner -->
-    <a class="mentor-banner" href="/user/signup/mentor">
-      <div class="mentor-banner-left">
-        <div class="mentor-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-            <path d="M16 3.13a4 4 0 010 7.75"/>
+    <!-- Role Selector -->
+    <div class="role-selector">
+
+      <label class="role-card">
+        <input type="radio" name="role" value="learner" checked required />
+        <div class="role-card-inner">
+          <div class="role-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+            </svg>
+          </div>
+          <span class="role-label">Learner</span>
+          <span class="role-desc">Discover skills &amp; learn from top mentors</span>
+        </div>
+        <div class="role-check">
+          <svg viewBox="0 0 12 10" fill="none" stroke="#0d0f14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 5l3 3 7-7"/>
           </svg>
         </div>
-        <div class="mentor-text">
-          <strong>Are you a Mentor?</strong>
-          <span>Sign up here to teach &amp; inspire learners</span>
+      </label>
+
+      <label class="role-card">
+        <input type="radio" name="role" value="mentor" required />
+        <div class="role-card-inner">
+          <div class="role-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c8a96e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+              <path d="M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+          <span class="role-label">Mentor</span>
+          <span class="role-desc">Teach your skills &amp; inspire others</span>
         </div>
-      </div>
-      <div class="mentor-banner-arrow">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 18l6-6-6-6"/>
-        </svg>
-      </div>
-    </a>
+        <div class="role-check">
+          <svg viewBox="0 0 12 10" fill="none" stroke="#0d0f14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 5l3 3 7-7"/>
+          </svg>
+        </div>
+      </label>
+
+    </div>
 
     <!-- Submit -->
     <button type="submit" class="btn-submit">Create Account</button>
