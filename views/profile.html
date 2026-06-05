@@ -301,9 +301,9 @@
         <div class="fields-grid cols-2">
 
           <div class="field">
-            <label class="field-label" for="fullName">Full Name</label>
-            <div class="field-value view-mode" id="view-fullName">—</div>
-            <input type="text" id="fullName" name="fullName" class="edit-mode" style="display:none" placeholder="Your full name" />
+            <label class="field-label" for="fullname">Full Name</label>
+            <div class="field-value view-mode" id="view-fullname">—</div>
+            <input type="text" id="fullname" name="fullname" class="edit-mode" style="display:none" placeholder="Your full name" />
           </div>
 
           <div class="field">
@@ -359,7 +359,7 @@
       console.log("User: ", u)
       console.log("Username: ",u.username);
       // Sidebar
-      const avatarSrc = u.profileImageURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName || 'User')}&background=191c25&color=6ea8c8&size=72`;
+      const avatarSrc = u.profileImageURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullname || 'User')}&background=191c25&color=6ea8c8&size=72`;
       document.getElementById('sidebarAvatar').src = avatarSrc;
       document.getElementById('uploadPreview').src  = avatarSrc;
       if (u.fullname)  document.getElementById('sidebarName').textContent      = u.fullname;
@@ -429,14 +429,14 @@
     e.preventDefault();
 
     const val = id => document.getElementById(id).value.trim();
-    const fullName = val('fullName');
+    const fullName = val('fullname');
     const username = val('username');
     const email    = val('email');
     const age      = val('age');
     const gender   = val('gender');
 
     const formData = new FormData();
-    formData.append('fullName', fullName);
+    formData.append('fullname', fullName);
     formData.append('username', username);
     formData.append('email', email);
     formData.append('age', age);
@@ -458,7 +458,7 @@
       if (res.ok) {
         if (fullName) {
           document.getElementById('sidebarName').textContent  = fullName;
-          document.getElementById('view-fullName').textContent = fullName;
+          document.getElementById('view-fullname').textContent = fullName;
         }
         if (username) {
           document.getElementById('sidebarHandle').textContent = '@' + username;
