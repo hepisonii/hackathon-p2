@@ -1,30 +1,39 @@
-const {Schema, model} = require("mongoose")
+// models/MentorProfile.js
+const mongoose = require("mongoose");
 
-const profileSchema = new Schema({ 
-    createdBy: {
-        type: Schema.Types.ObjectId,
-        ref: "user",
-    },
-    bio: {
-        type: String,
-    },
-    skills: {
-        type: String,
-    },
-    location: {
-        type: String,
-    },
-    state: {
-        type: String,
-    },
-    city: {
-        type: String,
-    },
-    rating: {
-        type: Number,
-    },
-}, {timestamps: true});
+const mentorProfileSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    unique: true
+  },
 
-const Profile = model("profile", profileSchema);
+  bio: String,
 
-module.exports = Profile; 
+  category: {
+    type: String,
+    required: true
+  },
+
+  skills: [String],
+
+  hourlyRate: {
+    type: Number,
+    required: true
+  },
+
+  rating: {
+    type: Number,
+    default: 0
+  },
+
+  totalSessions: {
+    type: Number,
+    default: 0
+  }
+
+}, { timestamps: true });
+
+mentorProfileSchema.index({ category: 1, skills: 1 });
+
+module.exports = mongoose.model("MentorProfile", mentorProfileSchema);
