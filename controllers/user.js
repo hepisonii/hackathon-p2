@@ -20,14 +20,22 @@ async function handlePostUserSignUp(req,res){
 
 if (req.file) {
     const photo = await cloudinary.uploader.upload(req.file.path, {
-        folder: "interview-app",
+        folder: "hackathon-p2",
     });
     fs.unlinkSync(req.file.path);
     imageUrl = photo.secure_url;
     profileImageId = photo.public_id;
 }
     const user = await User.create({
-    
+        fullname,
+        username,
+        email,
+        password,
+        role,
+        age,
+        gender,
+        profileImageURL: imageUrl,
+        profileImageId
     });
     return res.redirect("/user/login");
 }
