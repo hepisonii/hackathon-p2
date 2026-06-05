@@ -88,7 +88,7 @@ async function handlePatchProfile(req, res) {
 
     // 🔐 Allowed fields
     const allowedFields = ["fullname","username", "email", "gender", "age"];
-
+    console.log("Body: ",req.body);
     // 🔄 Update body fields
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
