@@ -195,7 +195,6 @@
       color: var(--text); padding: 2px 4px;
     }
     .skills-text-input::placeholder { color: #3a3e4d; }
-    /* hidden inputs for skills array */
     .skills-hidden { display: none; }
 
     /* RATE INPUT */
@@ -213,7 +212,8 @@
     .btn-cancel {
       padding: 11px 22px; background: none; border: 1px solid var(--border); border-radius: 11px;
       font-size: 0.85rem; font-family: 'DM Sans', sans-serif; color: var(--muted);
-      cursor: pointer; font-weight: 500; transition: border-color 0.2s, color 0.2s;
+      cursor: pointer; font-weight: 500; transition: border-color 0.2s, color 0.2s; text-decoration: none;
+      display: inline-flex; align-items: center;
     }
     .btn-cancel:hover { border-color: var(--muted-light); color: var(--text); }
     .btn-save {
@@ -260,30 +260,27 @@
         <img
           class="avatar-img"
           id="sidebarAvatar"
-          src="<%= user.profileImageURL %>"
-          alt="<%= user.fullName %>"
-          onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.fullName) %>&background=191c25&color=c8a96e&size=64'"
+          src="https://ui-avatars.com/api/?name=Alex+Johnson&background=191c25&color=c8a96e&size=64"
+          alt="Alex Johnson"
         />
         <span class="role-badge">Mentor</span>
       </div>
-      <p class="sidebar-name"><%= user.fullName %></p>
-      <p class="sidebar-handle">@<%= user.username %></p>
+      <p class="sidebar-name">Alex Johnson</p>
+      <p class="sidebar-handle">@alexjohnson</p>
 
       <!-- Stats -->
       <div class="stats-grid">
         <div class="stat-box">
-          <div class="stat-value" id="sidebarRating">
-            <%= mentor.rating ? mentor.rating.toFixed(1) : '—' %>
-          </div>
+          <div class="stat-value" id="sidebarRating">4.8</div>
           <div class="stat-label">Rating</div>
         </div>
         <div class="stat-box">
-          <div class="stat-value" id="sidebarSessions"><%= mentor.totalSessions || 0 %></div>
+          <div class="stat-value" id="sidebarSessions">132</div>
           <div class="stat-label">Sessions</div>
         </div>
         <div class="stat-box" style="grid-column: 1 / -1;">
           <div class="stat-value" id="sidebarRate">
-            $<%= mentor.hourlyRate || 0 %><span style="font-size:0.7rem;font-weight:400;color:var(--muted)">/hr</span>
+            $75<span style="font-size:0.7rem;font-weight:400;color:var(--muted)">/hr</span>
           </div>
           <div class="stat-label">Hourly Rate</div>
         </div>
@@ -294,7 +291,7 @@
       <!-- Category -->
       <p class="sidebar-section-title">Category</p>
       <div id="sidebarCategory" class="sidebar-category" style="margin-bottom:16px">
-        <%= mentor.category || 'Not set' %>
+        Technology
       </div>
 
       <div class="sidebar-divider"></div>
@@ -302,20 +299,16 @@
       <!-- Skills preview -->
       <p class="sidebar-section-title">Skills</p>
       <div class="skills-list" id="sidebarSkills">
-        <% if (mentor.skills && mentor.skills.length > 0) { %>
-          <% mentor.skills.forEach(function(skill) { %>
-            <span class="skill-tag"><%= skill %></span>
-          <% }); %>
-        <% } else { %>
-          <span style="font-size:0.8rem;color:var(--muted)">No skills added yet</span>
-        <% } %>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">UI/UX</span>
       </div>
     </div>
   </aside>
 
   <!-- MAIN CARD -->
   <main class="main-card">
-    <div class="main-card" style="background:none;border:none;border-radius:0;overflow:visible;animation:none">
     <div class="card-header">
       <div>
         <p class="card-header-title">Mentor Portfolio</p>
@@ -325,23 +318,17 @@
 
     <div class="card-body">
 
-      <!-- Server flash messages -->
-      <% if (typeof successMsg !== 'undefined' && successMsg) { %>
-        <div class="flash-msg success"><%= successMsg %></div>
-      <% } %>
-      <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
-        <div class="flash-msg error"><%= errorMsg %></div>
-      <% } %>
+      <!-- Flash messages (hidden by default, shown via JS) -->
       <div id="jsFlash" class="flash-msg"></div>
 
-      <form id="portfolioForm" action="/mentor/portfolio" method="POST" novalidate>
+      <form id="portfolioForm" novalidate>
 
         <!-- BIO -->
         <p class="section-title">About You</p>
         <div class="fields-grid" style="margin-bottom:26px">
           <div class="field">
             <label class="field-label" for="bio">Bio</label>
-            <textarea id="bio" name="bio" placeholder="Tell learners about your background, teaching style, and what you offer…"><%= mentor.bio || '' %></textarea>
+            <textarea id="bio" name="bio" placeholder="Tell learners about your background, teaching style, and what you offer…">I'm a full-stack developer with 8+ years of experience building scalable web applications. I specialize in JavaScript ecosystems and love helping people go from zero to their first deployed app. My teaching style is hands-on — we build real things together.</textarea>
             <span class="field-hint">This shows on your public profile. Keep it genuine and concise.</span>
           </div>
         </div>
@@ -355,17 +342,19 @@
           <div class="field">
             <label class="field-label" for="category">Category</label>
             <select id="category" name="category" required>
-              <option value="" disabled <%= !mentor.category ? 'selected' : '' %>>Select a category</option>
-              <%
-                const categories = [
-                  'Technology', 'Design', 'Business', 'Marketing',
-                  'Music', 'Language', 'Finance', 'Health & Fitness',
-                  'Photography', 'Writing', 'Data Science', 'Other'
-                ];
-                categories.forEach(function(cat) {
-              %>
-                <option value="<%= cat %>" <%= mentor.category === cat ? 'selected' : '' %>><%= cat %></option>
-              <% }); %>
+              <option value="" disabled>Select a category</option>
+              <option value="Technology" selected>Technology</option>
+              <option value="Design">Design</option>
+              <option value="Business">Business</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Music">Music</option>
+              <option value="Language">Language</option>
+              <option value="Finance">Finance</option>
+              <option value="Health &amp; Fitness">Health &amp; Fitness</option>
+              <option value="Photography">Photography</option>
+              <option value="Writing">Writing</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
@@ -380,7 +369,7 @@
                 min="0"
                 step="1"
                 placeholder="0"
-                value="<%= mentor.hourlyRate || '' %>"
+                value="75"
                 required
               />
             </div>
@@ -396,21 +385,32 @@
         <div class="field" style="margin-bottom:26px">
           <label class="field-label">Your Skills</label>
           <div class="skills-input-wrap" id="skillsWrap" onclick="document.getElementById('skillInput').focus()">
-            <!-- Existing skill pills rendered from DB -->
-            <% if (mentor.skills && mentor.skills.length > 0) { %>
-              <% mentor.skills.forEach(function(skill) { %>
-                <span class="skill-pill" data-skill="<%= skill %>">
-                  <%= skill %>
-                  <button type="button" onclick="removeSkill(this)" aria-label="Remove <%= skill %>">×</button>
-                  <input type="hidden" name="skills[]" value="<%= skill %>" class="skills-hidden" />
-                </span>
-              <% }); %>
-            <% } %>
+            <!-- Pre-populated skills -->
+            <span class="skill-pill" data-skill="JavaScript">
+              JavaScript
+              <button type="button" onclick="removeSkill(this)" aria-label="Remove JavaScript">×</button>
+              <input type="hidden" name="skills[]" value="JavaScript" class="skills-hidden" />
+            </span>
+            <span class="skill-pill" data-skill="React">
+              React
+              <button type="button" onclick="removeSkill(this)" aria-label="Remove React">×</button>
+              <input type="hidden" name="skills[]" value="React" class="skills-hidden" />
+            </span>
+            <span class="skill-pill" data-skill="Node.js">
+              Node.js
+              <button type="button" onclick="removeSkill(this)" aria-label="Remove Node.js">×</button>
+              <input type="hidden" name="skills[]" value="Node.js" class="skills-hidden" />
+            </span>
+            <span class="skill-pill" data-skill="UI/UX">
+              UI/UX
+              <button type="button" onclick="removeSkill(this)" aria-label="Remove UI/UX">×</button>
+              <input type="hidden" name="skills[]" value="UI/UX" class="skills-hidden" />
+            </span>
             <input
               type="text"
               id="skillInput"
               class="skills-text-input"
-              placeholder="<%= (!mentor.skills || mentor.skills.length === 0) ? 'Type a skill and press Enter or comma…' : 'Add more…' %>"
+              placeholder="Add more…"
               autocomplete="off"
             />
           </div>
@@ -423,7 +423,6 @@
         </div>
 
       </form>
-    </div>
     </div>
   </main>
 
@@ -441,7 +440,7 @@
   function addSkill(raw) {
     const val = raw.trim().replace(/,+$/, '').trim();
     if (!val) return;
-    if (getSkills().map(s => s.toLowerCase()).includes(val.toLowerCase())) return; // no duplicates
+    if (getSkills().map(s => s.toLowerCase()).includes(val.toLowerCase())) return;
 
     const pill = document.createElement('span');
     pill.className = 'skill-pill';
@@ -493,22 +492,66 @@
       `$${val}<span style="font-size:0.7rem;font-weight:400;color:var(--muted)">/hr</span>`;
   });
 
-  /* ── Form validation before submit ── */
-  document.getElementById('portfolioForm').addEventListener('submit', function(e) {
+  /* ── Form submit via Fetch API ── */
+  document.getElementById('portfolioForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Client-side validation
     const category = document.getElementById('category').value;
     const hourlyRate = document.getElementById('hourlyRate').value;
 
     if (!category) {
-      e.preventDefault();
       showFlash('Please select a category.', 'error');
       document.getElementById('category').focus();
       return;
     }
     if (hourlyRate === '' || isNaN(Number(hourlyRate)) || Number(hourlyRate) < 0) {
-      e.preventDefault();
       showFlash('Please enter a valid hourly rate (0 or more).', 'error');
       document.getElementById('hourlyRate').focus();
       return;
+    }
+
+    // Build JSON payload
+    const payload = {
+      bio: document.getElementById('bio').value.trim(),
+      category,
+      hourlyRate: Number(hourlyRate),
+      skills: getSkills()
+    };
+
+    // Disable button & show loading state
+    const saveBtn = document.querySelector('.btn-save');
+    const originalText = saveBtn.textContent;
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
+    saveBtn.style.opacity = '0.7';
+
+    try {
+      const response = await fetch('/mentor/portfolio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showFlash(data.message || 'Portfolio saved successfully!', 'success');
+      } else {
+        showFlash(data.error || 'Something went wrong. Please try again.', 'error');
+      }
+    } catch (err) {
+      // Network error or server unreachable
+      showFlash('Could not reach the server. Check your connection and try again.', 'error');
+      console.error('Fetch error:', err);
+    } finally {
+      // Restore button
+      saveBtn.disabled = false;
+      saveBtn.textContent = originalText;
+      saveBtn.style.opacity = '';
     }
   });
 
