@@ -421,7 +421,7 @@
   // Replace this URL with your actual API endpoint
   async function loadUser() {
     try {
-      const res = await fetch('/api/user/me');       // ← replace with your route
+      const res = await fetch('/api/user');       // ← replace with your route
       const user = await res.json();
 
       const avatarWrap = document.getElementById('sb-avatar-wrap');
