@@ -16,6 +16,10 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
+    password: {
+        type: String,
+        required: true,
+    },
     age: {
         type: Number,
         required: true,
@@ -33,21 +37,10 @@ const userSchema = new Schema({
     profilePhotoId: {
         type: String,
     },
-    bio: {
-        type: String,
-    },
-    skills: {
-        type: String,
-    },
-    location: {
-        type: String,
-    },
-    rating: {
-        type: Number,
-    },
 }, {timestamps: true});
 
 userSchema.pre("save", async function (){
+    console.log("Pre save hit");
     const user = this;
     if(!user.isModified("password")) return;
     const password = user.password;
@@ -55,14 +48,20 @@ userSchema.pre("save", async function (){
     const hashed = createHmac("sha256", salt).update(password).digest("hex");
     user.password = hashed;
     user.salt = salt;
+    console.log("Pre save done");
 })
 
 userSchema.static("matchPassword",async function (username,password){
+    console.log("Point 1")
     const user = await this.findOne({username});
     if(!user) return false;
+        console.log("Point 2")
+
     const salt = user.salt;
     const hashed = user.password;
     const providedHashed = createHmac("sha256", salt).update(password).digest("hex");
+        console.log("Point 3")
+
     if(providedHashed === hashed){
     const token = setToken(user);
     return token;

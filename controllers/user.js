@@ -9,7 +9,8 @@ async function handleGetUserSignUp(req,res){
 }
 
 async function handlePostUserSignUp(req,res){
-    const {fullname,username,password,age,gender, qualifications,role} = req.body;
+    const {fullname,email,username,password,age,gender,role} = req.body;
+    console.log("Body Signup: ", req.body);
     const entry = await User.findOne({username});
     if(entry){
         return res.render("signup", {
@@ -47,6 +48,7 @@ async function handleGetUserLogin(req,res){
 
 async function handlePostUserLogin(req,res){
     const {username,password} = req.body;
+    console.log("Body", req.body);
     const token = await User.matchPassword(username,password)
      if(!token){
         return res.render("login", {
