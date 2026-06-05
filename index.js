@@ -22,6 +22,7 @@ app.set("views", Path.resolve("./views"));
 
 app.use("/user", userRouter);
 app.use("/api", apiRouter);
+app.use("/mentor/profile", mentorRouter);
 
 app.get("/", (req,res) => {
     const user = req.user;
